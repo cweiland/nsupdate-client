@@ -13,35 +13,37 @@ Tested on Linux and OSX.
 
 ## Configure your DNS server
 
-Generate a public/private key pair:
+Generate a public/private key pair :
 
-    dnssec-keygen -a HMAC-MD5 -b 512 -n HOST www.domain.com.
+    tsig-keygen -a HMAC-SHA512 www.domain.com >  ddns-key.www.domain.fr.key
+
+Copy ddns-key.www.domain.fr.key to you host.
 
 Configure your DNS zone like this:
 
     zone "domain.com" {
       type master;
       file "/etc/bind/domain.com.hosts";
-      allow-update { key "www.domain.com."; };
+      update-policy {
+            grant ddns-key.www.domain.fr name www.domain.fr ANY;
+        };
     };
 
     key "www.domain.com" {
       algorithm hmac-md5;
-      secret "the-value-of-the-generated-key-that-you-can-see-in-public-and-private-keys ==";
+      secret "secret value on file ddns-key.www.domain.fr.key";
     };
 
 Restart your DNS Server
 
-    /etc/init.d/bind9 restart
+    systemctl restart bind9
 
 
 ## Usage on your client
 
 Clone the project 
 
-    git clone git@github.com:tomav/nsupdate-client.git
-
-Copy the generated public/private keys on your machine. They must not be separated.
+    git clone git@github.com:cweiland/nsupdate-client.git
 
 And then choose the command that fit your needs:
 
@@ -51,7 +53,7 @@ And then choose the command that fit your needs:
     With internal dynamic IP (where ethX is your interface name, like eth0, en1, ppp2...)
     ./nsupdate-client -k Kdomain.com+xxxxxx.private -r sub.domain.com -l 600 -t A -d if_ethX
 
-    With external dynamic IP 
+    With external dynamic IP (update only when external ip changes)
     ./nsupdate-client -k Kdomain.com+xxxxxx.private -r sub.domain.com -l 600 -t A -d external
 
     With CNAME
