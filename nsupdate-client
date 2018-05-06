@@ -86,6 +86,7 @@ if [ "$DEST" = "external" ]; then
     echo "IP changed to $IP"
   else
     echo "IP ($IP) dont changed... skipped"
+    exit
   fi
 fi
 elif [[ "$DEST" == *if_* ]]; then
