@@ -82,13 +82,13 @@ fi
 if [ "$DEST" = "external" ]; then
   echo "> Getting IP address..."
   DEST=$(curl -s http://bot.whatismyipaddress.com)
-  if [ ! -f "$filepath" ] || [ $IP != "$(cat $filepath)" ]; then
-    echo "IP changed to $IP"
+  if [ ! -f "$filepath" ] || [ $DEST != "$(cat $filepath)" ]; then
+    echo "IP changed to $DEST"
+    echo $DEST > $filepath;
   else
-    echo "IP ($IP) dont changed... skipped"
+    echo "IP ($DEST) dont changed... skipped"
     exit
   fi
-fi
 elif [[ "$DEST" == *if_* ]]; then
   echo "> Getting IP address..."
   IFACE=$(echo "$DEST" | sed 's/if_//g')
