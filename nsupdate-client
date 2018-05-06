@@ -1,8 +1,9 @@
 #!/bin/bash
-# Author:       Thomas VIAL
-# Author URL:   http://tvi.al
+# Original Author:       Thomas VIAL 
+# Next Author : Christophe WEILAND
 # Description:  A simple client to update DNS record from a remote client to a DNS server using nsupdate protocol, like No-IP or DynDNS for your own domain names.
- 
+
+filepath="/dev/shm/current_external_ip"
 PN=`basename $0`
 ARGS=`getopt --name "$PN" --long help:,record:,dest:,type:,life: --options hr:d:t:k:l:v -- "$@"`
 if [ $? -ne 0 ]; then
@@ -29,16 +30,16 @@ usage=$( cat <<EOF
 # nsupdater-client usage:
 #
 #  With static IP
-#  $0 -k Kdomain.com+xxxxxx.private -r sub.domain.com -l 600 -t A -d 192.168.1.100
+#  $0 -k ddns-key.www.domain.fr.key -r www.domain.fr -l 600 -t A -d 192.168.1.100
 #
 #  With internal dynamic IP (where ethX is your interface name, like eth0, en1, ppp2...)
-#  $0 -k Kdomain.com+xxxxxx.private -r sub.domain.com -l 600 -t A -d if_ethX
+#  $0 -k ddns-key.www.domain.fr.key -r www.domain.fr -l 600 -t A -d if_ethX
 #
 #  With external dynamic IP 
-#  $0 -k Kdomain.com+xxxxxx.private -r sub.domain.com -l 600 -t A -d external
+#  $0 -k ddns-key.www.domain.fr.key -r www.domain.fr -l 600 -t A -d external
 #
 #  With CNAME
-#  $0 -k Kdomain.com+xxxxxx.private -r sub.domain.com -l 600 -t CNAME domain.com
+#  $0 -k ddns-key.www.domain.fr.key -r www.domain.fr -l 600 -t CNAME domain.fr
 EOF
 )
 
@@ -81,6 +82,12 @@ fi
 if [ "$DEST" = "external" ]; then
   echo "> Getting IP address..."
   DEST=$(curl -s http://bot.whatismyipaddress.com)
+  if [ ! -f "$filepath" ] || [ $IP != "$(cat $filepath)" ]; then
+    echo "IP changed to $IP"
+  else
+    echo "IP ($IP) dont changed... skipped"
+  fi
+fi
 elif [[ "$DEST" == *if_* ]]; then
   echo "> Getting IP address..."
   IFACE=$(echo "$DEST" | sed 's/if_//g')
