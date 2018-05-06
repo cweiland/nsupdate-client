@@ -57,6 +57,6 @@ And then choose the command that fit your needs:
     ./nsupdate-client -k ddns-key.www.domain.fr.key -r www.domain.fr -l 600 -t A -d external
 
     With CNAME
-    ./nsupdate-client -k ddns-key.www.domain.fr.key -r www.domain.fr -l 600 -t CNAME domain.com
+    ./nsupdate-client -k ddns-key.www.domain.fr.key -r www.domain.fr -l 600 -t CNAME domain.fr
 
 
