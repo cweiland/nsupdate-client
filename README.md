@@ -48,15 +48,15 @@ Clone the project
 And then choose the command that fit your needs:
 
     With static IP
-    ./nsupdate-client -k Kdomain.com+xxxxxx.private -r sub.domain.com -l 600 -t A -d 192.168.1.100
+    ./nsupdate-client -k ddns-key.www.domain.fr.key -r www.domain.fr -l 600 -t A -d 192.168.1.100
 
     With internal dynamic IP (where ethX is your interface name, like eth0, en1, ppp2...)
-    ./nsupdate-client -k Kdomain.com+xxxxxx.private -r sub.domain.com -l 600 -t A -d if_ethX
+    ./nsupdate-client -k ddns-key.www.domain.fr.key -r www.domain.fr -l 600 -t A -d if_ethX
 
     With external dynamic IP (update only when external ip changes)
-    ./nsupdate-client -k Kdomain.com+xxxxxx.private -r sub.domain.com -l 600 -t A -d external
+    ./nsupdate-client -k ddns-key.www.domain.fr.key -r www.domain.fr -l 600 -t A -d external
 
     With CNAME
-    ./nsupdate-client -k Kdomain.com+xxxxxx.private -r sub.domain.com -l 600 -t CNAME domain.com
+    ./nsupdate-client -k ddns-key.www.domain.fr.key -r www.domain.fr -l 600 -t CNAME domain.com
 
 
